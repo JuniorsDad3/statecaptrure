@@ -1,0 +1,8 @@
+Flask
+Flask-Limiter
+captcha
+openpyxl
+requests
+opencv-python-headless
+gunicorn
+```
