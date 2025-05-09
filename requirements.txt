@@ -1,8 +1,12 @@
 Flask
 Flask-Limiter
+flask-talisman
 captcha
 openpyxl
 requests
 opencv-python-headless
+sentry-sdk
+redis
 gunicorn
-```
+redis
+pydub
