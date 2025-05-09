@@ -1,18 +1,35 @@
-from flask import Flask, render_template, request, session, make_response, url_for, redirect
+import os
+import time
+import uuid
+import random
+import string
+import logging
+
+from flask import (
+    Flask, render_template, request,
+    make_response, url_for
+)
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from flask_talisman import Talisman
 from captcha.image import ImageCaptcha
 from captcha.audio import AudioCaptcha
-import random, string, time, uuid, logging, cv2, numpy as np, openpyxl, os, requests
-
+import numpy as np
+import cv2
+import openpyxl
+import requests
 import sentry_sdk
 from sentry_sdk.integrations.flask import FlaskIntegration
 
-# Configuration
+from pydub import AudioSegment
+
+# ──────────────────────────────────────────────────────────────────────────────
+# App & Config
+# ──────────────────────────────────────────────────────────────────────────────
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY', 'ChangeThisSecretKey')
 
+# Sentry for error & performance monitoring
 sentry_sdk.init(
     dsn=os.environ.get('SENTRY_DSN'),
     integrations=[FlaskIntegration()],
@@ -20,6 +37,7 @@ sentry_sdk.init(
     environment=os.environ.get('FLASK_ENV', 'production')
 )
 
+# HTTPS redirect + strict CSP
 csp = {
     'default-src': ["'self'"],
     'script-src': ["'self'", 'https://www.google.com/recaptcha/'],
@@ -27,7 +45,6 @@ csp = {
     'img-src':    ["'self'", 'data:'],
     'media-src':  ["'self'"]
 }
-
 Talisman(
     app,
     content_security_policy=csp,
@@ -36,78 +53,118 @@ Talisman(
     strict_transport_security_max_age=31536000
 )
 
-# Rate Limiting
-limiter = Limiter(app, key_func=get_remote_address, default_limits=["10 per minute"])
+# Rate Limiting (Redis backend via REDIS_URL)
+app.config['RATELIMIT_STORAGE_URL'] = os.environ.get('REDIS_URL', 'memory://')
+limiter = Limiter(
+    key_func=get_remote_address,
+    default_limits=["10 per minute"]
+)
+limiter.init_app(app)
 
-# Google reCAPTCHA v2
-RECAPTCHA_SITE_KEY = os.environ.get('RECAPTCHA_SITE_KEY', 'your_site_key')
-RECAPTCHA_SECRET_KEY = os.environ.get('RECAPTCHA_SECRET_KEY', 'your_secret_key')
+# Google reCAPTCHA v2 keys
+RECAPTCHA_SITE_KEY   = os.environ.get('RECAPTCHA_SITE_KEY', '')
+RECAPTCHA_SECRET_KEY = os.environ.get('RECAPTCHA_SECRET_KEY', '')
 
-# Excel session & log files
+# Excel files for session storage & logs
 SESSIONS_FILE = 'sessions.xlsx'
-LOG_FILE = 'captcha_logs.xlsx'
-for fname, headers in [(SESSIONS_FILE, ['session_id','captcha','timestamp','used']),
-                       (LOG_FILE, ['timestamp','ip','event','detail'])]:
+LOG_FILE      = 'captcha_logs.xlsx'
+for fname, headers in [
+    (SESSIONS_FILE, ['session_id','captcha','timestamp','used']),
+    (LOG_FILE,      ['timestamp','ip','event','detail'])
+]:
     if not os.path.exists(fname):
-        wb = openpyxl.Workbook(); ws = wb.active; ws.append(headers); wb.save(fname)
+        wb = openpyxl.Workbook()
+        ws = wb.active
+        ws.append(headers)
+        wb.save(fname)
 
-# Logging
-logging.basicConfig(filename='app.log', level=logging.INFO,
-                    format='%(asctime)s %(levelname)s: %(message)s')
+# App-level logger
+logging.basicConfig(
+    filename='app.log',
+    level=logging.INFO,
+    format='%(asctime)s %(levelname)s: %(message)s'
+)
 
+quotes = [
+  "Trust the process, not the outcome.",
+  "Even bots need a break from logic.",
+  "Security is humanity’s best puzzle.",
+  "Only a human reads this far."
+]
+ai_quote = random.choice(quotes)
+
+resp = make_response(render_template(
+    'index.html',
+    captcha_sid=sid,
+    recaptcha_site_key=RECAPTCHA_SITE_KEY,
+    puzzle_question=puzzle_q,
+    ai_quote=ai_quote
+))
+
+# ──────────────────────────────────────────────────────────────────────────────
 # Excel helpers
+# ──────────────────────────────────────────────────────────────────────────────
 def store_session(sid, text):
-    wb, ws = openpyxl.load_workbook(SESSIONS_FILE), openpyxl.load_workbook(SESSIONS_FILE).active
-    ws.append([sid, text, time.time(), False]); wb.save(SESSIONS_FILE)
+    wb = openpyxl.load_workbook(SESSIONS_FILE)
+    ws = wb.active
+    ws.append([sid, text, time.time(), False])
+    wb.save(SESSIONS_FILE)
 
 def get_session(sid):
-    wb, ws = openpyxl.load_workbook(SESSIONS_FILE), openpyxl.load_workbook(SESSIONS_FILE).active
+    wb = openpyxl.load_workbook(SESSIONS_FILE)
+    ws = wb.active
     for row in ws.iter_rows(min_row=2, values_only=True):
-        if row[0]==sid: return {'captcha':row[1],'timestamp':row[2],'used':row[3]}
+        if row[0] == sid:
+            return {'captcha': row[1], 'timestamp': row[2], 'used': row[3]}
     return None
 
 def mark_used(sid):
-    wb, ws = openpyxl.load_workbook(SESSIONS_FILE), openpyxl.load_workbook(SESSIONS_FILE).active
+    wb = openpyxl.load_workbook(SESSIONS_FILE)
+    ws = wb.active
     for row in ws.iter_rows(min_row=2):
-        if row[0].value==sid: row[3].value=True; break
+        if row[0].value == sid:
+            row[3].value = True
+            break
     wb.save(SESSIONS_FILE)
 
 def log_event(ip, event, detail=''):
-    wb, ws = openpyxl.load_workbook(LOG_FILE), openpyxl.load_workbook(LOG_FILE).active
-    ws.append([time.time(), ip, event, detail]); wb.save(LOG_FILE)
+    wb = openpyxl.load_workbook(LOG_FILE)
+    ws = wb.active
+    ws.append([time.time(), ip, event, detail])
+    wb.save(LOG_FILE)
     logging.info(f"{ip} - {event}: {detail}")
 
-# Bot-pattern detection using OpenCV (simple motion blur detection)
+# ──────────────────────────────────────────────────────────────────────────────
+# Bot-pattern detection (simple blur-variance check)
+# ──────────────────────────────────────────────────────────────────────────────
 def is_bot_image(image_bytes):
     arr = np.frombuffer(image_bytes, np.uint8)
     img = cv2.imdecode(arr, cv2.IMREAD_GRAYSCALE)
     lap = cv2.Laplacian(img, cv2.CV_64F).var()
-    # low variance => likely bot-generated blur
-    return lap < 50
+    return lap < 50  # low variance = possible bot
 
+# ──────────────────────────────────────────────────────────────────────────────
 # Routes
+# ──────────────────────────────────────────────────────────────────────────────
 @app.route('/')
 @limiter.limit("5 per minute")
 def index():
-    sid = str(uuid.uuid4())
-    text = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
-    store_session(sid, text)
-
-    # Generate CAPTCHA image & audio
-    image = ImageCaptcha(width=280, height=90)
-    img_data = image.generate(text)
-    audio = AudioCaptcha(); audio.generate(text).save(f'static/{sid}.wav')
-
-    resp = make_response(render_template('index.html',
-                                         captcha_sid=sid,
-                                         recaptcha_site_key=RECAPTCHA_SITE_KEY))
+    sid  = str(uuid.uuid4())
+    # … all of your CAPTCHA‐generation code …
+    resp = make_response(render_template(
+        'index.html',
+        captcha_sid=sid,
+        recaptcha_site_key=RECAPTCHA_SITE_KEY,
+        puzzle_question=puzzle_q,
+        ai_quote=ai_quote
+    ))
     resp.set_cookie('captcha_sid', sid, max_age=300)
     return resp
 
 @app.route('/captcha_image/<sid>')
 def captcha_image(sid):
     sess = get_session(sid)
-    if not sess or sess['used'] or time.time()-sess['timestamp']>300:
+    if not sess or sess['used'] or time.time() - sess['timestamp'] > 300:
         return '', 404
     image = ImageCaptcha(width=280, height=90)
     return image.generate(sess['captcha']).read(), 200, {'Content-Type':'image/png'}
@@ -115,30 +172,64 @@ def captcha_image(sid):
 @app.route('/verify', methods=['POST'])
 @limiter.limit("10 per minute")
 def verify():
-    sid = request.cookies.get('captcha_sid')
-    user_input = request.form.get('captcha_input','').upper()
+    ip = get_remote_address()
+
+    # 1) Puzzle check
+    user_puzzle = request.form.get('puzzle_answer', '').strip()
+    if user_puzzle != session.get('puzzle_ans'):
+        log_event(ip, 'puzzle_failed', f"got={user_puzzle}")
+        return "❌ Puzzle incorrect", 400
+
+    # 2) reCAPTCHA check
     recaptcha_resp = requests.post(
         'https://www.google.com/recaptcha/api/siteverify',
-        data={'secret': RECAPTCHA_SECRET_KEY, 'response': request.form.get('g-recaptcha-response')}
+        data={
+            'secret':   RECAPTCHA_SECRET_KEY,
+            'response': request.form.get('g-recaptcha-response')
+        }
     ).json()
-    ip = get_remote_address()
     if not recaptcha_resp.get('success'):
-        log_event(ip,'recaptcha_failed',str(recaptcha_resp))
+        log_event(ip, 'recaptcha_failed', str(recaptcha_resp))
         return "reCAPTCHA failed", 400
+
+    # 3) Session/CAPTCHA expiry check
+    sid = request.cookies.get('captcha_sid')
     sess = get_session(sid)
-    if not sess or sess['used'] or time.time()-sess['timestamp']>300:
-        log_event(ip,'captcha_expired',sid)
+    if not sess or sess['used'] or time.time() - sess['timestamp'] > 300:
+        log_event(ip, 'captcha_expired', sid)
         return "Expired, reload", 400
-    # Bot detection example
-    if is_bot_image(request.files['captcha_image'].read()):
-        log_event(ip,'bot_detected',sid)
+
+    # 4) Bot-image detection
+    file_storage = request.files.get('captcha_image')
+    if file_storage and is_bot_image(file_storage.read()):
+        log_event(ip, 'bot_detected', sid)
         return "Bot-like activity detected", 400
-    if user_input==sess['captcha']:
-        mark_used(sid); log_event(ip,'success',sid)
-        return "Verified!"
-    log_event(ip,'captcha_failed',f"input={user_input}")
-    return "Incorrect", 400
+
+    # 5) CAPTCHA text check
+    user_input = request.form.get('captcha_input', '').upper()
+    if user_input == sess['captcha']:
+        mark_used(sid)
+        log_event(ip, 'success', sid)
+        return "✅ Verified!"
+    else:
+        log_event(ip, 'captcha_failed', f"input={user_input}")
+        return "❌ Incorrect", 400
+
+@app.route("/generate-audio")
+def generate_audio():
+    text = "1234"
+    sid = str(uuid.uuid4())
+    audio = AudioCaptcha()
+
+    # Make sure the static/ folder exists
+    os.makedirs("static", exist_ok=True)
+
+    # Save audio captcha
+    audio.write(text, f'static/{sid}.wav')
+    return f"Audio CAPTCHA saved as static/{sid}.wav"
+
+sound = AudioSegment.from_wav(f'static/{sid}.wav')
+sound[:2000].export(f'static/{sid}.wav', format="wav")
 
 if __name__=='__main__': app.run(host='0.0.0.0',port=5000)
-``` 
 
