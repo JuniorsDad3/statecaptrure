@@ -1,4 +1,3 @@
-```yaml
 services:
   - type: web
     name: flask-captcha
@@ -12,6 +11,17 @@ services:
         value: "<your_site_key>"
       - key: RECAPTCHA_SECRET_KEY
         value: "<your_secret_key>"
-    ports:
-      - 5000
-```
+      - key: SENTRY_DSN
+        value: "<your_sentry_dsn>"
+      - key: REDIS_URL
+        fromDatabase:
+          name: flask-captcha-redis
+          property: url
+    disks:
+      - name: captcha-data
+        mountPath: /app
+
+databases:
+  - name: flask-captcha-redis
+    engine: redis
+    plan: free

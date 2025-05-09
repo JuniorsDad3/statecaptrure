@@ -6,7 +6,7 @@ import string
 import logging
 
 from flask import (
-    Flask, render_template, request,
+    Flask, render_template, request,session,redirect,
     make_response, url_for
 )
 from flask_limiter import Limiter
@@ -93,14 +93,6 @@ quotes = [
 ]
 ai_quote = random.choice(quotes)
 
-resp = make_response(render_template(
-    'index.html',
-    captcha_sid=sid,
-    recaptcha_site_key=RECAPTCHA_SITE_KEY,
-    puzzle_question=puzzle_q,
-    ai_quote=ai_quote
-))
-
 # ──────────────────────────────────────────────────────────────────────────────
 # Excel helpers
 # ──────────────────────────────────────────────────────────────────────────────
@@ -149,8 +141,31 @@ def is_bot_image(image_bytes):
 @app.route('/')
 @limiter.limit("5 per minute")
 def index():
-    sid  = str(uuid.uuid4())
-    # … all of your CAPTCHA‐generation code …
+    # 1) Generate a new session ID and puzzle
+    sid = str(uuid.uuid4())
+    a, b = random.randint(1, 9), random.randint(1, 9)
+    puzzle_q = f"What is {a} + {b}?"
+    session['puzzle_ans'] = str(a + b)
+    ai_quote = random.choice([
+        "Trust the process, not the outcome.",
+        "Even bots need a break from logic.",
+        "Security is humanity’s best puzzle.",
+        "Only a human reads this far."
+    ])
+
+    # 2) Store the CAPTCHA text
+    text = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
+    store_session(sid, text)
+
+    # 3) Generate and trim audio CAPTCHA
+    os.makedirs('static', exist_ok=True)
+    audio = AudioCaptcha()
+    audio.write(text, f'static/{sid}.wav')
+    # trim to 2 seconds (requires pydub & ffmpeg)
+    sound = AudioSegment.from_wav(f'static/{sid}.wav')
+    sound[:2000].export(f'static/{sid}.wav', format="wav")
+
+    # 4) Build the response
     resp = make_response(render_template(
         'index.html',
         captcha_sid=sid,
@@ -227,9 +242,6 @@ def generate_audio():
     # Save audio captcha
     audio.write(text, f'static/{sid}.wav')
     return f"Audio CAPTCHA saved as static/{sid}.wav"
-
-sound = AudioSegment.from_wav(f'static/{sid}.wav')
-sound[:2000].export(f'static/{sid}.wav', format="wav")
 
 if __name__=='__main__': app.run(host='0.0.0.0',port=5000)
 

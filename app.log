@@ -1,0 +1,141 @@
+2025-05-08 16:19:05,143 INFO: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-05-08 16:19:05,144 INFO: [33mPress CTRL+C to quit[0m
+2025-05-08 16:19:05,463 INFO:  * Restarting with watchdog (windowsapi)
+2025-05-08 16:19:11,173 WARNING:  * Debugger is active!
+2025-05-08 16:19:11,200 INFO:  * Debugger PIN: 413-888-360
+2025-05-08 16:43:18,275 INFO:  * Detected change in 'C:\\Users\\dell5348\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\flask\\app.py', reloading
+2025-05-08 16:43:18,308 INFO:  * Detected change in 'C:\\Users\\dell5348\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\flask_limiter\\extension.py', reloading
+2025-05-08 16:43:18,401 INFO:  * Detected change in 'C:\\Users\\dell5348\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\sentry_sdk\\integrations\\flask.py', reloading
+2025-05-08 16:43:18,426 INFO:  * Detected change in 'C:\\Users\\dell5348\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\sentry_sdk\\integrations\\wsgi.py', reloading
+2025-05-08 16:43:18,426 INFO:  * Detected change in 'C:\\Users\\dell5348\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\sentry_sdk\\utils.py', reloading
+2025-05-08 16:43:19,265 INFO:  * Restarting with watchdog (windowsapi)
+2025-05-08 16:44:18,193 WARNING:  * Debugger is active!
+2025-05-08 16:44:18,216 INFO:  * Debugger PIN: 413-888-360
+2025-05-08 16:44:19,015 INFO: 127.0.0.1 - - [08/May/2025 16:44:19] "[35m[1mGET / HTTP/1.1[0m" 500 -
+2025-05-08 16:44:25,758 INFO: 127.0.0.1 - - [08/May/2025 16:44:25] "GET /?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 200 -
+2025-05-08 16:44:28,417 INFO: 127.0.0.1 - - [08/May/2025 16:44:28] "GET /?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 200 -
+2025-05-08 16:44:28,476 INFO: 127.0.0.1 - - [08/May/2025 16:44:28] "GET /?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2025-05-08 16:44:28,478 INFO: 127.0.0.1 - - [08/May/2025 16:44:28] "GET /?__debugger__=yes&cmd=resource&f=console.png&s=VmOB8aXtALE4oyk8HPZA HTTP/1.1" 200 -
+2025-05-08 16:44:28,791 INFO: 127.0.0.1 - - [08/May/2025 16:44:28] "[36mGET /?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-05-09 19:21:37,151 INFO: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-05-09 19:21:37,192 INFO: [33mPress CTRL+C to quit[0m
+2025-05-09 19:21:38,978 INFO:  * Restarting with watchdog (windowsapi)
+2025-05-09 19:22:20,542 WARNING:  * Debugger is active!
+2025-05-09 19:22:20,572 INFO:  * Debugger PIN: 413-888-360
+2025-05-09 19:23:16,474 INFO:  * Detected change in 'C:\\Users\\dell5348\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\flask\\app.py', reloading
+2025-05-09 19:23:16,693 INFO:  * Detected change in 'C:\\Users\\dell5348\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\sentry_sdk\\integrations\\flask.py', reloading
+2025-05-09 19:23:16,777 INFO:  * Detected change in 'C:\\Users\\dell5348\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\sentry_sdk\\integrations\\wsgi.py', reloading
+2025-05-09 19:23:16,953 INFO:  * Detected change in 'C:\\Users\\dell5348\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\sentry_sdk\\utils.py', reloading
+2025-05-09 19:23:16,986 INFO: 127.0.0.1 - - [09/May/2025 19:23:16] "[35m[1mGET / HTTP/1.1[0m" 500 -
+2025-05-09 19:23:27,676 INFO:  * Restarting with watchdog (windowsapi)
+2025-05-09 19:24:33,409 WARNING:  * Debugger is active!
+2025-05-09 19:24:33,502 INFO:  * Debugger PIN: 413-888-360
+2025-05-09 19:24:33,753 INFO: 127.0.0.1 - - [09/May/2025 19:24:33] "GET /?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2025-05-09 19:24:33,765 INFO: 127.0.0.1 - - [09/May/2025 19:24:33] "[36mGET /?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-05-09 19:27:38,858 INFO: 127.0.0.1 - - [09/May/2025 19:27:38] "[35m[1mGET / HTTP/1.1[0m" 500 -
+2025-05-09 19:27:39,088 INFO: 127.0.0.1 - - [09/May/2025 19:27:39] "GET /?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 200 -
+2025-05-09 19:27:39,101 INFO: 127.0.0.1 - - [09/May/2025 19:27:39] "GET /?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 200 -
+2025-05-09 19:27:39,492 INFO: 127.0.0.1 - - [09/May/2025 19:27:39] "GET /?__debugger__=yes&cmd=resource&f=console.png&s=4NEgvdkEHw4netuimERL HTTP/1.1" 200 -
+2025-05-09 19:27:39,494 INFO: 127.0.0.1 - - [09/May/2025 19:27:39] "[36mGET /?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-05-09 19:27:39,624 INFO: 127.0.0.1 - - [09/May/2025 19:27:39] "[36mGET /?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-05-09 19:37:45,069 INFO:  * Detected change in 'C:\\Users\\dell5348\\Atlasbot\\statecapture\\app.py', reloading
+2025-05-09 19:37:46,008 INFO:  * Restarting with watchdog (windowsapi)
+2025-05-09 19:38:36,278 INFO: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-05-09 19:38:36,278 INFO: [33mPress CTRL+C to quit[0m
+2025-05-09 19:38:36,549 INFO:  * Restarting with watchdog (windowsapi)
+2025-05-09 19:38:40,638 WARNING:  * Debugger is active!
+2025-05-09 19:38:40,648 INFO:  * Debugger PIN: 413-888-360
+2025-05-09 19:42:17,045 INFO:  * Detected change in 'C:\\Users\\dell5348\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\captcha\\audio.py', reloading
+2025-05-09 19:42:17,091 INFO: 127.0.0.1 - - [09/May/2025 19:42:17] "[35m[1mGET / HTTP/1.1[0m" 500 -
+2025-05-09 19:42:17,136 INFO: 127.0.0.1 - - [09/May/2025 19:42:17] "[36mGET /?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 304 -
+2025-05-09 19:42:17,139 INFO: 127.0.0.1 - - [09/May/2025 19:42:17] "[36mGET /?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 304 -
+2025-05-09 19:42:17,903 INFO:  * Restarting with watchdog (windowsapi)
+2025-05-09 19:42:49,365 WARNING:  * Debugger is active!
+2025-05-09 19:42:49,369 INFO:  * Debugger PIN: 413-888-360
+2025-05-09 19:42:49,519 INFO: 127.0.0.1 - - [09/May/2025 19:42:49] "GET /?__debugger__=yes&cmd=resource&f=console.png&s=DqP60fqCBGKMtAVVof0q HTTP/1.1" 200 -
+2025-05-09 19:42:49,520 INFO: 127.0.0.1 - - [09/May/2025 19:42:49] "[36mGET /?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-05-09 19:42:49,535 INFO: 127.0.0.1 - - [09/May/2025 19:42:49] "[36mGET /?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-05-09 19:43:32,459 INFO:  * Detected change in 'C:\\Users\\dell5348\\Atlasbot\\statecapture\\app.py', reloading
+2025-05-09 19:43:33,251 INFO:  * Restarting with watchdog (windowsapi)
+2025-05-09 19:43:41,499 WARNING:  * Debugger is active!
+2025-05-09 19:43:41,509 INFO:  * Debugger PIN: 413-888-360
+2025-05-09 19:43:51,229 INFO:  * Detected change in 'C:\\Users\\dell5348\\Atlasbot\\statecapture\\app.py', reloading
+2025-05-09 19:43:52,023 INFO:  * Restarting with watchdog (windowsapi)
+2025-05-09 19:43:56,664 WARNING:  * Debugger is active!
+2025-05-09 19:43:56,674 INFO:  * Debugger PIN: 413-888-360
+2025-05-09 19:44:05,124 INFO:  * Detected change in 'C:\\Users\\dell5348\\Atlasbot\\statecapture\\app.py', reloading
+2025-05-09 19:44:06,171 INFO:  * Restarting with watchdog (windowsapi)
+2025-05-09 19:44:11,275 WARNING:  * Debugger is active!
+2025-05-09 19:44:11,286 INFO:  * Debugger PIN: 413-888-360
+2025-05-09 19:44:25,932 INFO:  * Detected change in 'C:\\Users\\dell5348\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\flask\\templating.py', reloading
+2025-05-09 19:44:26,149 INFO:  * Detected change in 'C:\\Users\\dell5348\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\jinja2\\environment.py', reloading
+2025-05-09 19:44:26,166 INFO:  * Detected change in 'C:\\Users\\dell5348\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\jinja2\\loaders.py', reloading
+2025-05-09 19:44:26,678 INFO:  * Restarting with watchdog (windowsapi)
+2025-05-09 19:44:32,170 WARNING:  * Debugger is active!
+2025-05-09 19:44:32,182 INFO:  * Debugger PIN: 413-888-360
+2025-05-09 19:44:32,704 INFO: 127.0.0.1 - - [09/May/2025 19:44:32] "[35m[1mGET / HTTP/1.1[0m" 500 -
+2025-05-09 19:44:32,780 INFO: 127.0.0.1 - - [09/May/2025 19:44:32] "[36mGET /?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 304 -
+2025-05-09 19:44:32,782 INFO: 127.0.0.1 - - [09/May/2025 19:44:32] "[36mGET /?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 304 -
+2025-05-09 19:44:33,049 INFO: 127.0.0.1 - - [09/May/2025 19:44:33] "GET /?__debugger__=yes&cmd=resource&f=console.png&s=v6OgbA7sZjXPM47YvB5p HTTP/1.1" 200 -
+2025-05-09 19:44:33,059 INFO: 127.0.0.1 - - [09/May/2025 19:44:33] "[36mGET /?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-05-09 19:44:33,074 INFO: 127.0.0.1 - - [09/May/2025 19:44:33] "[36mGET /?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-05-09 19:44:50,119 INFO: 127.0.0.1 - - [09/May/2025 19:44:50] "GET / HTTP/1.1" 200 -
+2025-05-09 19:44:50,441 INFO: 127.0.0.1 - - [09/May/2025 19:44:50] "[35m[1mGET /static/c5fe9897-12c4-44f4-8203-1262165169cc.wav HTTP/1.1[0m" 206 -
+2025-05-09 19:44:50,648 INFO: 127.0.0.1 - - [09/May/2025 19:44:50] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-05-09 19:44:52,389 INFO: 127.0.0.1 - - [09/May/2025 19:44:52] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-05-09 19:45:07,260 INFO: 127.0.0.1 - - [09/May/2025 19:45:07] "GET / HTTP/1.1" 200 -
+2025-05-09 19:45:07,593 INFO: 127.0.0.1 - - [09/May/2025 19:45:07] "[35m[1mGET /static/6e2378d2-dec9-444e-bafb-8b6c5d8bb9d6.wav HTTP/1.1[0m" 206 -
+2025-05-09 19:46:38,826 INFO: 127.0.0.1 - - [09/May/2025 19:46:38] "GET / HTTP/1.1" 200 -
+2025-05-09 19:46:38,934 INFO: 127.0.0.1 - - [09/May/2025 19:46:38] "[33mGET /captcha_image/aad4a4b0-cfdf-43cb-959e-83c2f28f680e HTTP/1.1[0m" 404 -
+2025-05-09 19:46:40,466 INFO: 127.0.0.1 - - [09/May/2025 19:46:40] "[35m[1mGET /static/aad4a4b0-cfdf-43cb-959e-83c2f28f680e.wav HTTP/1.1[0m" 206 -
+2025-05-09 19:47:59,720 INFO:  * Detected change in 'C:\\Users\\dell5348\\Atlasbot\\statecapture\\app.py', reloading
+2025-05-09 19:48:03,933 INFO:  * Restarting with watchdog (windowsapi)
+2025-05-09 19:48:35,117 WARNING:  * Debugger is active!
+2025-05-09 19:48:35,140 INFO:  * Debugger PIN: 413-888-360
+2025-05-09 19:48:35,693 INFO: 127.0.0.1 - - [09/May/2025 19:48:35] "GET / HTTP/1.1" 200 -
+2025-05-09 19:48:36,059 INFO: 127.0.0.1 - - [09/May/2025 19:48:36] "GET /captcha_image/ecbd87c9-45bf-42bd-8d7d-4cb527abd82f HTTP/1.1" 200 -
+2025-05-09 19:48:36,205 INFO: 127.0.0.1 - - [09/May/2025 19:48:36] "[35m[1mGET /static/ecbd87c9-45bf-42bd-8d7d-4cb527abd82f.wav HTTP/1.1[0m" 206 -
+2025-05-09 19:50:51,319 INFO: 127.0.0.1 - - [09/May/2025 19:50:51] "GET / HTTP/1.1" 200 -
+2025-05-09 19:50:51,368 INFO: 127.0.0.1 - - [09/May/2025 19:50:51] "GET /captcha_image/bb66beb5-edde-43d6-9669-3517c0391605 HTTP/1.1" 200 -
+2025-05-09 19:50:52,010 INFO: 127.0.0.1 - - [09/May/2025 19:50:52] "[35m[1mGET /static/bb66beb5-edde-43d6-9669-3517c0391605.wav HTTP/1.1[0m" 206 -
+2025-05-09 21:37:03,679 INFO: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-05-09 21:37:03,696 INFO: [33mPress CTRL+C to quit[0m
+2025-05-09 21:37:03,840 INFO:  * Restarting with watchdog (windowsapi)
+2025-05-09 21:37:08,998 WARNING:  * Debugger is active!
+2025-05-09 21:37:09,007 INFO:  * Debugger PIN: 413-888-360
+2025-05-09 21:37:16,014 INFO:  * Detected change in 'C:\\Users\\dell5348\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\flask\\app.py', reloading
+2025-05-09 21:37:18,755 INFO:  * Restarting with watchdog (windowsapi)
+2025-05-09 21:37:25,791 WARNING:  * Debugger is active!
+2025-05-09 21:37:25,802 INFO:  * Debugger PIN: 413-888-360
+2025-05-09 21:37:25,917 INFO:  * Detected change in 'C:\\Users\\dell5348\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\sentry_sdk\\integrations\\flask.py', reloading
+2025-05-09 21:37:25,920 INFO:  * Detected change in 'C:\\Users\\dell5348\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\sentry_sdk\\integrations\\wsgi.py', reloading
+2025-05-09 21:37:25,927 INFO:  * Detected change in 'C:\\Users\\dell5348\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\sentry_sdk\\utils.py', reloading
+2025-05-09 21:37:25,934 INFO: 127.0.0.1 - - [09/May/2025 21:37:25] "[35m[1mGET / HTTP/1.1[0m" 500 -
+2025-05-09 21:37:26,042 INFO: 127.0.0.1 - - [09/May/2025 21:37:26] "[36mGET /?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 304 -
+2025-05-09 21:37:26,070 INFO: 127.0.0.1 - - [09/May/2025 21:37:26] "[36mGET /?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 304 -
+2025-05-09 21:37:27,314 INFO:  * Restarting with watchdog (windowsapi)
+2025-05-09 21:37:32,796 WARNING:  * Debugger is active!
+2025-05-09 21:37:32,806 INFO:  * Debugger PIN: 413-888-360
+2025-05-09 21:37:32,833 INFO: 127.0.0.1 - - [09/May/2025 21:37:32] "GET /?__debugger__=yes&cmd=resource&f=console.png&s=Z0XPl853klhGvO2YVvFR HTTP/1.1" 200 -
+2025-05-09 21:37:32,837 INFO: 127.0.0.1 - - [09/May/2025 21:37:32] "[36mGET /?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-05-09 21:37:32,896 INFO: 127.0.0.1 - - [09/May/2025 21:37:32] "[36mGET /?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-05-09 21:37:36,825 INFO: 127.0.0.1 - - [09/May/2025 21:37:36] "[35m[1mGET / HTTP/1.1[0m" 500 -
+2025-05-09 21:37:36,860 INFO: 127.0.0.1 - - [09/May/2025 21:37:36] "[36mGET /?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1[0m" 304 -
+2025-05-09 21:37:36,867 INFO: 127.0.0.1 - - [09/May/2025 21:37:36] "[36mGET /?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1[0m" 304 -
+2025-05-09 21:37:37,175 INFO: 127.0.0.1 - - [09/May/2025 21:37:37] "GET /?__debugger__=yes&cmd=resource&f=console.png&s=9uWjsnCv5j8P7vWrg62K HTTP/1.1" 200 -
+2025-05-09 21:37:37,180 INFO: 127.0.0.1 - - [09/May/2025 21:37:37] "[36mGET /?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-05-09 21:37:37,197 INFO: 127.0.0.1 - - [09/May/2025 21:37:37] "[36mGET /?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1[0m" 304 -
+2025-05-09 21:38:54,260 INFO:  * Detected change in 'C:\\Users\\dell5348\\Atlasbot\\statecapture\\app.py', reloading
+2025-05-09 21:38:55,576 INFO:  * Restarting with watchdog (windowsapi)
+2025-05-09 21:39:01,313 WARNING:  * Debugger is active!
+2025-05-09 21:39:01,327 INFO:  * Debugger PIN: 413-888-360
+2025-05-09 21:39:50,296 INFO: 127.0.0.1 - - [09/May/2025 21:39:50] "GET / HTTP/1.1" 200 -
+2025-05-09 21:39:50,761 INFO: 127.0.0.1 - - [09/May/2025 21:39:50] "GET /captcha_image/6f0c27fa-b4d7-47ff-9129-d24e204b1230 HTTP/1.1" 200 -
+2025-05-09 21:39:50,828 INFO: 127.0.0.1 - - [09/May/2025 21:39:50] "[35m[1mGET /static/6f0c27fa-b4d7-47ff-9129-d24e204b1230.wav HTTP/1.1[0m" 206 -
+2025-05-09 21:39:59,192 INFO: 127.0.0.1 - - [09/May/2025 21:39:59] "GET / HTTP/1.1" 200 -
+2025-05-09 21:39:59,240 INFO: 127.0.0.1 - - [09/May/2025 21:39:59] "GET /captcha_image/a1e5b5ee-adf2-4f6a-b599-d11645f46b61 HTTP/1.1" 200 -
+2025-05-09 21:39:59,485 INFO: 127.0.0.1 - - [09/May/2025 21:39:59] "[35m[1mGET /static/a1e5b5ee-adf2-4f6a-b599-d11645f46b61.wav HTTP/1.1[0m" 206 -

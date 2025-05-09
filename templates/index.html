@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  
+  <!-- Bootstrap & Google Fonts -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" rel="stylesheet">
+  
+  <title>Secure CAPTCHA Challenge</title>
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+  
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      min-height: 100vh;
+      margin: 0;
+      display: flex; align-items: center; justify-content: center;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      background-size: 400% 400%;
+      animation: bgShift 15s ease infinite;
+      color: #fff;
+    }
+    @keyframes bgShift {
+      0% {background-position:0% 50%}
+      50%{background-position:100% 50%}
+      100%{background-position:0% 50%}
+    }
+    .card {
+      background: rgba(0,0,0,0.6);
+      border: none;
+      border-radius: 1rem;
+      padding: 2rem;
+      max-width: 400px;
+      width: 100%;
+    }
+    .card h2 { font-weight: 700; }
+    .quote { font-style: italic; font-size: 0.9rem; opacity: 0.9; margin-bottom: 1rem; }
+    .puzzle { background: rgba(255,255,255,0.1); padding: 0.5rem; border-radius: 0.5rem; margin-bottom: 1rem; }
+    .btn-primary { background-color: #ff9a9e; border: none; }
+    .btn-primary:hover { background-color: #fad0c4; }
+  </style>
+</head>
+<body>
+  <div class="card text-center">
+    <h2>Verify You’re Human</h2>
+    <div class="quote">“{{ ai_quote }}”</div>
+    
+    <!-- Simple Math Puzzle -->
+    <div class="puzzle">
+      <strong>Puzzle:</strong> {{ puzzle_question }}
+    </div>
+    
+    <!-- CAPTCHA Image -->
+    <img class="img-fluid mb-3"
+         src="{{ url_for('captcha_image', sid=captcha_sid) }}"
+         alt="CAPTCHA Image">
+    
+    <!-- Audio CAPTCHA + Replay -->
+    <div class="mb-3">
+      <audio id="captcha-audio" controls>
+        <source src="{{ url_for('static', filename=captcha_sid + '.wav') }}" type="audio/wav">
+        Your browser doesn’t support audio.
+      </audio>
+      <button type="button" class="btn btn-link text-light" id="reload-audio">
+        🔄 Replay Audio
+      </button>
+    </div>
+
+    <form method="post" action="{{ url_for('verify') }}" class="d-grid gap-2">
+      <input type="text" name="puzzle_answer" class="form-control" required
+             placeholder="Enter puzzle result">
+      <input type="text" name="captcha_input" class="form-control" required
+             placeholder="Enter CAPTCHA">
+             
+      <div class="g-recaptcha" data-sitekey="{{ recaptcha_site_key }}"></div>
+      <input type="hidden" name="captcha_image" value="{{ captcha_sid }}">
+      <button type="submit" class="btn btn-primary">Verify</button>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById('reload-audio').addEventListener('click', () => {
+      const audio = document.getElementById('captcha-audio');
+      const src   = audio.querySelector('source').src.split('?')[0];
+      audio.pause(); audio.currentTime = 0;
+      audio.querySelector('source').src = src + '?' + Date.now();
+      audio.load(); audio.play();
+    });
+  </script>
+</body>
+</html>
