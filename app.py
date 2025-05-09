@@ -139,7 +139,7 @@ def is_bot_image(image_bytes):
 # Routes
 # ──────────────────────────────────────────────────────────────────────────────
 @app.route('/')
-@limiter.limit("5 per minute")
+@limiter.limit("500 per minute")
 def index():
     # 1) Generate a new session ID and puzzle
     sid = str(uuid.uuid4())
@@ -185,7 +185,7 @@ def captcha_image(sid):
     return image.generate(sess['captcha']).read(), 200, {'Content-Type':'image/png'}
 
 @app.route('/verify', methods=['POST'])
-@limiter.limit("10 per minute")
+@limiter.limit("500 per minute")
 def verify():
     ip = get_remote_address()
 
