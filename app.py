@@ -22,6 +22,7 @@ import sentry_sdk
 from sentry_sdk.integrations.flask import FlaskIntegration
 
 from pydub import AudioSegment
+from gtts import gTTS
 
 # ──────────────────────────────────────────────────────────────────────────────
 # App & Config
@@ -126,6 +127,21 @@ def log_event(ip, event, detail=''):
     wb.save(LOG_FILE)
     logging.info(f"{ip} - {event}: {detail}")
 
+def _init_session():
+    sid = str(uuid.uuid4())
+    resp = make_response()  # you’ll attach the template later
+    resp.set_cookie('captcha_sid', sid, max_age=300)
+    return sid
+
+def _gen_text():
+    return ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
+
+def _fail(event, ip):
+    log_event(ip, event)
+    return "❌ Failed", 400
+
+def _success():
+    return "✅ Passed", 200
 # ──────────────────────────────────────────────────────────────────────────────
 # Bot-pattern detection (simple blur-variance check)
 # ──────────────────────────────────────────────────────────────────────────────
@@ -242,6 +258,106 @@ def generate_audio():
     # Save audio captcha
     audio.write(text, f'static/{sid}.wav')
     return f"Audio CAPTCHA saved as static/{sid}.wav"
+
+@app.route('/select')
+def select():
+    """Let user choose CAPTCHA type."""
+    return render_template('select.html')
+
+@app.route('/captcha/audio')
+def audio_captcha():
+    sid      = _init_session()
+    lang     = request.args.get('lang', 'en')       # 'zulu', 'xhosa', etc.
+    text     = _gen_text()
+    store_session(sid, text)
+
+    # generate TTS audio
+    tts = gTTS(text=text, lang=lang)
+    os.makedirs(f'static/audio/{lang}', exist_ok=True)
+    tts_path = f'static/audio/{lang}/{sid}.mp3'
+    tts.save(tts_path)
+
+    return render_template('audio.html',
+        captcha_sid=sid,
+        audio_url=url_for('static', filename=f'audio/{lang}/{sid}.mp3'),
+        recaptcha_site_key=RECAPTCHA_SITE_KEY
+    )
+
+@app.route('/captcha/visual')
+def visual_captcha():
+    sid       = _init_session()
+    category  = random.choice(['animals','colors','traffic_lights'])
+    image_dir = f'static/captcha_images/{category}'
+    images    = random.sample(os.listdir(image_dir), k=6)
+    # mark which images are “correct” (e.g. animal) in session
+    session['visual_answers'] = [img for img in images if category in img]
+
+    return render_template('visual.html',
+        captcha_sid=sid,
+        images=[url_for('static', filename=f'captcha_images/{category}/{i}') for i in images],
+        recaptcha_site_key=RECAPTCHA_SITE_KEY
+    )
+
+@app.route('/captcha/puzzle')
+def puzzle_captcha():
+    sid = _init_session()
+    typ = random.choice(['math','dragdrop','sequence'])
+
+    if typ == 'math':
+        a,b = random.randint(1,9), random.randint(1,9)
+        session['puzzle_ans'] = str(a+b)
+        question = f"What is {a} + {b}?"
+    elif typ == 'dragdrop':
+        # assume you’ve pre-made draggable slices images under static/puzzles/
+        parts = ['p1.png','p2.png','p3.png','p4.png']
+        random.shuffle(parts)
+        session['puzzle_ans'] = 'correct'  # validate client-side ordering
+        question = parts
+    else:  # sequence
+        steps = ['step1.png','step2.png','step3.png']
+        random.shuffle(steps)
+        session['puzzle_ans'] = '1,2,3'
+        question = steps
+
+    return render_template('puzzle.html',
+        captcha_sid=sid,
+        type=typ,
+        question=question,
+        recaptcha_site_key=RECAPTCHA_SITE_KEY
+    )
+
+@app.route('/captcha/hybrid')
+def hybrid_captcha():
+    sid = _init_session()
+    # reuse above logic
+    # e.g. pick a math puzzle and audio in one page
+    # …
+    return render_template('hybrid.html')
+
+@app.route('/validate', methods=['POST'])
+def validate():
+    sid = request.cookies.get('captcha_sid')
+    ip  = get_remote_address()
+
+    # 1) Puzzle (if present)
+    if 'puzzle_answer' in request.form:
+        if request.form['puzzle_answer'] != session.get('puzzle_ans'):
+            return _fail('puzzle_failed', ip)
+
+    # 2) Visual (if present)
+    selected = request.form.getlist('visual_sel')
+    if selected and set(selected) != set(session.get('visual_answers',[])):
+        return _fail('visual_failed', ip)
+
+    # 3) Audio/Image CAPTCHA text
+    if 'captcha_input' in request.form:
+        if request.form['captcha_input'].upper() != get_session(sid)['captcha']:
+            return _fail('captcha_failed', ip)
+
+    # 4) reCAPTCHA
+    # … your existing reCAPTCHA validation …
+
+    return _success()
 
 if __name__=='__main__': app.run(host='0.0.0.0',port=5000)
 

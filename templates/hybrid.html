@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block body %}
+  <h3>Hybrid CAPTCHA</h3>
+  <p>{{ ai_quote }}</p>
+  <p>{{ puzzle_question }}</p>
+  <audio controls src="{{ audio_url }}"></audio>
+  <input name="puzzle_answer" placeholder="Puzzle answer">
+  <input name="captcha_input" placeholder="Audio code">
+  <!-- recaptcha -->
+  <button>Submit</button>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block body %}
+  <h3>Puzzle CAPTCHA</h3>
+  {% if type=='math' %}
+    <p>{{ question }}</p>
+    <input name="puzzle_answer" required>
+  {% elif type=='dragdrop' %}
+    <!-- implement Sortable.js here -->
+  {% elif type=='sequence' %}
+    <!-- slider or select ordering -->
+  {% endif %}
+  <!-- recaptcha -->
+  <button>Submit</button>
+{% endblock %}

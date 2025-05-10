@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block body %}
+  <h3>Select CAPTCHA Type</h3>
+  <ul>
+    <li><a href="{{ url_for('audio_captcha') }}">Audio CAPTCHA</a></li>
+    <li><a href="{{ url_for('visual_captcha') }}">Visual CAPTCHA</a></li>
+    <li><a href="{{ url_for('puzzle_captcha') }}">Puzzle CAPTCHA</a></li>
+    <li><a href="{{ url_for('hybrid_captcha') }}">Hybrid CAPTCHA</a></li>
+  </ul>
+{% endblock %}

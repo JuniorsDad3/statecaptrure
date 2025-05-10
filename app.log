@@ -139,3 +139,12 @@
 2025-05-09 21:39:59,192 INFO: 127.0.0.1 - - [09/May/2025 21:39:59] "GET / HTTP/1.1" 200 -
 2025-05-09 21:39:59,240 INFO: 127.0.0.1 - - [09/May/2025 21:39:59] "GET /captcha_image/a1e5b5ee-adf2-4f6a-b599-d11645f46b61 HTTP/1.1" 200 -
 2025-05-09 21:39:59,485 INFO: 127.0.0.1 - - [09/May/2025 21:39:59] "[35m[1mGET /static/a1e5b5ee-adf2-4f6a-b599-d11645f46b61.wav HTTP/1.1[0m" 206 -
+2025-05-10 09:34:57,484 INFO: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-05-10 09:34:57,500 INFO: [33mPress CTRL+C to quit[0m
+2025-05-10 09:34:58,088 INFO:  * Restarting with watchdog (windowsapi)
+2025-05-10 09:35:56,232 WARNING:  * Debugger is active!
+2025-05-10 09:35:56,248 INFO:  * Debugger PIN: 413-888-360
+2025-05-10 09:37:11,132 INFO: 127.0.0.1 - - [10/May/2025 09:37:11] "GET / HTTP/1.1" 200 -
+2025-05-10 09:37:12,652 INFO: 127.0.0.1 - - [10/May/2025 09:37:12] "[35m[1mGET /static/03cec64e-63f2-41db-ab9e-c54c60418425.wav HTTP/1.1[0m" 206 -
+2025-05-10 09:37:12,762 INFO: 127.0.0.1 - - [10/May/2025 09:37:12] "GET /captcha_image/03cec64e-63f2-41db-ab9e-c54c60418425 HTTP/1.1" 200 -

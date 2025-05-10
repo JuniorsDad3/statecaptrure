@@ -1,13 +1,18 @@
 FROM python:3.11-slim
 WORKDIR /app
 
+# System deps
+RUN apt-get update && \
+    apt-get install -y ffmpeg && \
+    rm -rf /var/lib/apt/lists/*
+
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-# Ensure static folder exists for runtime
-RUN mkdir -p static
+# Ensure static subfolders exist at runtime
+RUN mkdir -p static/audio static/captcha_images
 
 RUN apt-get update && apt-get install -y ffmpeg && rm -rf /var/lib/apt/lists/*
 

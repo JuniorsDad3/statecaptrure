@@ -10,3 +10,5 @@ redis
 gunicorn
 redis
 pydub
+gTTS
+
