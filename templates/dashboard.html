@@ -1,0 +1,16 @@
+<!DOCTYPE html><html><body>
+<h1>Dashboard for {{ username }}</h1>
+<h2>Encrypted Messages</h2>
+<ul>
+  {% for s,r,msg,ts in messages %}
+    <li>{{ s }}→{{ r }} at {{ ts }}: {{ msg[:40] }}…</li>
+  {% endfor %}
+</ul>
+<h2>Threat Logs</h2>
+<ul>
+  {% for ts,ip,thr,det in threats %}
+    <li>[{{ thr }}] {{ ip }} at {{ ts }} — {{ det }}</li>
+  {% endfor %}
+</ul>
+<a href="/">Logout</a>
+</body></html>

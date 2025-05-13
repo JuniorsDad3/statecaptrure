@@ -6,7 +6,7 @@ import string
 import logging
 
 from flask import (
-    Flask, render_template, request,session,redirect,
+    Flask, render_template,send_file, request,session,redirect,
     make_response, url_for
 )
 from flask_limiter import Limiter
@@ -23,6 +23,8 @@ from sentry_sdk.integrations.flask import FlaskIntegration
 
 from pydub import AudioSegment
 from gtts import gTTS
+from cryptography.hazmat.primitives.asymmetric import rsa
+from cryptography.hazmat.primitives import serialization
 
 # ──────────────────────────────────────────────────────────────────────────────
 # App & Config
@@ -142,6 +144,43 @@ def _fail(event, ip):
 
 def _success():
     return "✅ Passed", 200
+
+def generate_rsa_keypair():
+    private_key = rsa.generate_private_key(public_exponent=65537, key_size=2048)
+    private_bytes = private_key.private_bytes(
+        encoding=serialization.Encoding.PEM,
+        format=serialization.PrivateFormat.TraditionalOpenSSL,
+        encryption_algorithm=serialization.NoEncryption()
+    )
+    public_key = private_key.public_key()
+    public_bytes = public_key.public_bytes(
+        encoding=serialization.Encoding.PEM,
+        format=serialization.PublicFormat.SubjectPublicKeyInfo
+    )
+    return private_bytes.decode(), public_bytes.decode()
+def hash_pw(pw): return hashlib.sha256(pw.encode()).hexdigest()
+
+def load_db(): return openpyxl.load_workbook(DB)
+
+def gen_rsa():  # returns (pub, priv)
+    priv = rsa.generate_private_key(65537,2048)
+    p_bytes = priv.private_bytes(
+        serialization.Encoding.PEM,
+        serialization.PrivateFormat.PKCS8,
+        serialization.NoEncryption())
+    pub = priv.public_key().public_bytes(
+        serialization.Encoding.PEM,
+        serialization.PublicFormat.SubjectPublicKeyInfo)
+    return pub.decode(), p_bytes.decode()
+
+def log_threat(ip, thr, det=''):
+    wb = load_db(); ws=wb['threat_logs']
+    ws.append([time.time(),ip,thr,det]); wb.save(DB)
+
+def verify_recaptcha(token):
+    resp = requests.post('https://www.google.com/recaptcha/api/siteverify',
+                         data={'secret':RECAPTCHA_SECRET,'response':token}).json()
+    return resp.get('success',False)
 # ──────────────────────────────────────────────────────────────────────────────
 # Bot-pattern detection (simple blur-variance check)
 # ──────────────────────────────────────────────────────────────────────────────
@@ -154,6 +193,73 @@ def is_bot_image(image_bytes):
 # ──────────────────────────────────────────────────────────────────────────────
 # Routes
 # ──────────────────────────────────────────────────────────────────────────────
+# 1) Registration & Key Generation
+@app.route('/register', methods=['POST'])
+def register():
+    user = request.form['username']; pw = request.form['password']
+    wb = load_db(); ws=wb['users']
+    for r in ws.iter_rows(min_row=2,values_only=True):
+        if r[0]==user: return "Username exists",400
+    pub,priv = gen_rsa()
+    ws.append([user,hash_pw(pw),pub,priv]); wb.save(DB)
+    return render_template('keys.html', public_key=pub, private_key=priv)
+
+# 2) Encrypt Message
+@app.route('/encrypt', methods=['POST'])
+def encrypt_msg():
+    sender = request.form['username']
+    msg    = request.form['message'].encode()
+    wb=load_db(); ws=wb['users']
+    keyrow = next(r for r in ws.iter_rows(min_row=2,values_only=True) if r[0]==sender)
+    pub = serialization.load_pem_public_key(keyrow[2].encode())
+    cipher = pub.encrypt(msg,
+        serialization.OAEP(
+            mgf=serialization.MGF1(algorithm=serialization.hashes.SHA256()),
+            algorithm=serialization.hashes.SHA256(),label=None))
+    b64 = cipher.hex()
+    ws2=wb['messages']; ws2.append([sender,'',b64,time.time()]); wb.save(DB)
+    return render_template('result.html', result=b64)
+
+# 3) Decrypt Message
+@app.route('/decrypt', methods=['POST'])
+def decrypt_msg():
+    user   = request.form['username']; cipher_hex=request.form['cipher']
+    wb=load_db(); ws=wb['users']
+    keyrow=next(r for r in ws.iter_rows(min_row=2,values_only=True) if r[0]==user)
+    priv = serialization.load_pem_private_key(keyrow[3].encode(),None)
+    plain = priv.decrypt(bytes.fromhex(cipher_hex),
+        serialization.OAEP(
+            mgf=serialization.MGF1(algorithm=serialization.hashes.SHA256()),
+            algorithm=serialization.hashes.SHA256(),label=None))
+    return render_template('result.html', result=plain.decode())
+
+# 4) Threat Logger sample (logs every failed login)
+@app.route('/login', methods=['POST'])
+@limiter.limit("5/minute")
+def login():
+    user,pw = request.form['username'], request.form['password']
+    wb=load_db(); ws=wb['users']
+    row = next((r for r in ws.iter_rows(min_row=2,values_only=True) if r[0]==user),None)
+    ip=get_remote_address()
+    if not row or hash_pw(pw)!=row[1]:
+        log_threat(ip,'login_failed',f"user={user}")
+        return "Login failed",400
+    session['user']=user
+    return redirect(url_for('dashboard'))
+
+# 5) Simple Dashboard
+@app.route('/dashboard')
+def dashboard():
+    if 'user' not in session: return redirect(url_for('home'))
+    wb=load_db()
+    msgs = wb['messages']
+    logs = wb['threat_logs']
+    return render_template('dashboard.html',
+        username=session['user'],
+        messages=list(msgs.iter_rows(min_row=2,values_only=True)),
+        threats=list(logs.iter_rows(min_row=2,values_only=True))
+    )
+
 @app.route('/')
 @limiter.limit("500 per minute")
 def index():
@@ -191,6 +297,12 @@ def index():
     ))
     resp.set_cookie('captcha_sid', sid, max_age=300)
     return resp
+
+@app.route('/generate_key')
+def generate_key():
+    priv, pub = generate_rsa_keypair()
+    return render_template("keys.html", public_key=pub, private_key=priv)
+
 
 @app.route('/captcha_image/<sid>')
 def captcha_image(sid):

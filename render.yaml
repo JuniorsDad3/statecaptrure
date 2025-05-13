@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: flask-captcha
+    name: cybershieldlite
     env: docker
     plan: free
     dockerfilePath: ./Dockerfile
@@ -12,16 +12,16 @@ services:
       - key: RECAPTCHA_SECRET_KEY
         value: "<your_secret_key>"
       - key: SENTRY_DSN
-        value: "<your_sentry_dsn>"
+        value: "<your_sentry_dsn>"    # optional
       - key: REDIS_URL
         fromDatabase:
-          name: flask-captcha-redis
+          name: cybershield-redis
           property: url
     disks:
-      - name: captcha-data
+      - name: cybershield-data
         mountPath: /app
 
 databases:
-  - name: flask-captcha-redis
+  - name: cybershield-redis
     engine: redis
     plan: free
